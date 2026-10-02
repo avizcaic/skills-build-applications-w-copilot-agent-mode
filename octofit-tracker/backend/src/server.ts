@@ -14,13 +14,21 @@ const baseUrl = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev`
   : 'http://localhost:8000';
 
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  ...(codespaceName ? [`https://${codespaceName}-5173.app.github.dev`] : []),
-];
+const localOrigins = new Set(['http://localhost:5173', 'http://localhost:5174']);
+const codespaceOriginPattern = codespaceName
+  ? new RegExp(`^https://${codespaceName}-\\d+\\.app\\.github\\.dev$`)
+  : null;
 
-app.use(cors({ origin: allowedOrigins }));
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || localOrigins.has(origin) || codespaceOriginPattern?.test(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`Origin ${origin} is not allowed by CORS`));
+  },
+}));
 app.use(express.json());
 
 app.use('/api/users', usersRouter);
