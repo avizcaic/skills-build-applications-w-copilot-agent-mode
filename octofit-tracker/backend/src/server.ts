@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import './config/database.js';
 import { activitiesRouter } from './routes/activities.js';
@@ -13,6 +14,13 @@ const baseUrl = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev`
   : 'http://localhost:8000';
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  ...(codespaceName ? [`https://${codespaceName}-5173.app.github.dev`] : []),
+];
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 app.use('/api/users', usersRouter);
