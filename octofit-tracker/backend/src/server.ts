@@ -1,15 +1,32 @@
 import express from 'express';
+import { baseUrl } from './config/apiUrl.js';
 import './config/database.js';
+import { activitiesRouter } from './routes/activities.js';
+import { leaderboardRouter } from './routes/leaderboard.js';
+import { teamsRouter } from './routes/teams.js';
+import { usersRouter } from './routes/users.js';
+import { workoutsRouter } from './routes/workouts.js';
 
 const app = express();
 const port = Number(process.env.PORT ?? 8000);
 
 app.use(express.json());
 
+app.use('/api/users', usersRouter);
+app.use('/api/teams', teamsRouter);
+app.use('/api/activities', activitiesRouter);
+app.use('/api/leaderboard', leaderboardRouter);
+app.use('/api/workouts', workoutsRouter);
+
 app.get('/api/health', (_request, response) => {
-  response.status(200).json({ status: 'ok' });
+  response.status(200).json({ status: 'ok', baseUrl });
+});
+
+app.use((error: Error, _request: express.Request, response: express.Response, _next: express.NextFunction) => {
+  console.error('API error:', error);
+  response.status(500).json({ error: 'Internal server error' });
 });
 
 app.listen(port, () => {
-  console.log(`OctoFit API listening on port ${port}`);
+  console.log(`OctoFit API listening at ${baseUrl} on port ${port}`);
 });
