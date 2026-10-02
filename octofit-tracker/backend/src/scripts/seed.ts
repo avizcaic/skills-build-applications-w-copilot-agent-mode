@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
-import { Activity, LeaderboardEntry, Team, User, Workout } from '../models/octofitModels.js';
+import Activity from '../models/Activity.js';
+import Leaderboard from '../models/Leaderboard.js';
+import Team from '../models/Team.js';
+import User from '../models/User.js';
+import Workout from '../models/Workout.js';
 
 const connectionString = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 
@@ -173,14 +177,14 @@ async function seedDatabase() {
       User.deleteMany({}),
       Team.deleteMany({}),
       Activity.deleteMany({}),
-      LeaderboardEntry.deleteMany({}),
+      Leaderboard.deleteMany({}),
       Workout.deleteMany({}),
     ]);
 
     await Team.insertMany(teams);
     await User.insertMany(users);
     await Activity.insertMany(activities);
-    await LeaderboardEntry.insertMany(leaderboardEntries);
+    await Leaderboard.insertMany(leaderboardEntries);
     await Workout.insertMany(workouts);
 
     console.log('Database seeding complete');

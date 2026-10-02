@@ -1,4 +1,4 @@
-import { LeaderboardEntry } from '../models/octofitModels.js';
+import Leaderboard from '../models/Leaderboard.js';
 import { createResourceRouter } from './createResourceRouter.js';
 
-export const leaderboardRouter = createResourceRouter('leaderboard', LeaderboardEntry, { rank: 1 });
+export const leaderboardRouter = createResourceRouter('leaderboard', Leaderboard, { rank: 1 });
